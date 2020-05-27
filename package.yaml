@@ -1,0 +1,26 @@
+descriptor-schema-version: "2.7"
+info:
+  name: "IOx Webserver"
+  author-link: "http://www.cisco.com"
+  author-name: "Flo Pachinger"
+  description: "Nginx Webserver (Port 8000)"
+  version: "1.0"
+
+app:
+  cpuarch: "x86_64"
+  #cpuarch: "aarch64"
+  type: "docker"
+  resources:
+    profile: "custom"
+    cpu: "400"
+    disk: "100"
+    memory: "400"
+    network:
+      -
+        interface-name: eth0
+        ports:
+          tcp: ["8000"]
+
+  startup:
+    rootfs: rootfs.tar
+    target: ["/entrypoint.sh"]
