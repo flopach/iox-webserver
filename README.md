@@ -4,16 +4,14 @@ With this application you can easily deploy the **NGINX web-server** on your IOx
 
 ## Running the App
 
-### Download deploy-ready Package File
+### 1. [Download deploy-ready IOx Package File](https://github.com/flopach/iox-webserver/releases)
 
-1. Download the IOx package file from the releases of this repo: `https://github.com/flopach/iox-webserver/releases`
-
-### Installation & Configuration
+### 2. Installation, Configuration & Outcome
 
 1. Install the application on your IOx device.
 2. Go to `http://<IP to Container>:8000` and you will see the output of the `index.html`-file.
 
-### Tested Hardware
+**Tested Hardware**
 
 * Cisco IR1101 / IOS XE 17.1
 * Cisco IC3000 / 1.2.1
@@ -26,7 +24,7 @@ Check the CPU architecture on your hardware (for example: ARM for IR1101, x86 fo
 
 > Check out the [IOx Platform Support Matrix](https://developer.cisco.com/docs/iox/#!platform-support-matrix) for more information!
 
-####ARM-based IOx devices
+**ARM-based IOx devices**
 
 Dockerfile:
 
@@ -44,7 +42,7 @@ app:
   cpuarch: "aarch64"
 ```
 
-####x86-based IOx devices
+**x86-based IOx devices**
 
 Dockerfile:
 
