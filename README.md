@@ -6,7 +6,7 @@ With this application you can easily deploy the **NGINX web-server** on your IOx
 
 ### Download deploy-ready Package File
 
-1. Download your package from the `package_files` folder.
+1. Download the IOx package file from the releases of this repo: `https://github.com/flopach/iox-webserver/releases`
 
 ### Installation & Configuration
 
