@@ -1,10 +1,29 @@
-# IOx App: Filehosting
+# IOx App: Webserver
 
 With this application you can easily deploy the **NGINX web-server** on your IOx network device.
 
-## Running the App
+## Quickstart: Build & Install
 
-### 1. [Download deploy-ready IOx Package File](https://github.com/flopach/iox-webserver/releases)
+Change `x86`to `ARM` to build the app for the ARM-architecture.
+
+### 1.a Create the Package File (IOx Docker App)
+
+```
+docker build https://github.com/flopach/iox-webserver.git:x86 -t ioxapp
+docker save ioxapp > ioxapp.tar
+```
+
+The [Docker Runtime](https://www.docker.com/products/docker-desktop) needs to be installed on your computer.
+
+### 1.b Create the Package File (IOx App)
+
+```
+git clone https://github.com/flopach/iox-webserver
+cd iox-webserver/x86
+docker build -t ioxapp .
+ioxclient docker package ioxapp .
+```
+The [Docker Runtime](https://www.docker.com/products/docker-desktop) and [ioxclient](https://developer.cisco.com/docs/iox/#!iox-resource-downloads/downloads) need to be installed on your computer. You can download the files via [Git](https://git-scm.com/downloads) or as ZIP (Clone or download > Download ZIP).
 
 ### 2. Installation, Configuration & Outcome
 
@@ -16,15 +35,16 @@ With this application you can easily deploy the **NGINX web-server** on your IOx
 * Cisco IR1101 / IOS XE 17.1
 * Cisco IC3000 / 1.2.1
 
-## Building the App
+## Deep-Dive: Configure the IOx App
 
-### 1. Select IOx Platform
+### Differences between /ARM and /x86
 
-Check the CPU architecture on your hardware (for example: ARM for IR1101, x86 for IC3000 and IR829/IR809) and edit the configuration files. With the character `#` we are commenting the other architecture out.
+IOx runs on different hardware platforms which are using different CPU architectures. For example: ARM for IR1101, x86 for IC3000 and IR829/IR809.
+However, with this application only 2 lines of code are different as you will see below. With the character `#` we are commenting the other architecture out.
 
 > Check out the [IOx Platform Support Matrix](https://developer.cisco.com/docs/iox/#!platform-support-matrix) for more information!
 
-**ARM-based IOx devices**
+**ARM-based IOx devices in folder /ARM**
 
 Dockerfile:
 
@@ -42,7 +62,7 @@ app:
   cpuarch: "aarch64"
 ```
 
-**x86-based IOx devices**
+**x86-based IOx devices in folder /x86**
 
 Dockerfile:
 
@@ -67,12 +87,7 @@ You may edit the configuration files:
 * **Dockerfile**: Add more files to the webserver
 * **nginx.conf**: Configure your nginx server
 * **index.html**: Change the website running on the server
-* **entrypoint.sh**: Configure other applications which should run when the container starts
-
-#### 3. Build .tar package and deploy
-
-Please follow this guide here: https://developer.cisco.com/docs/iox/#!overview
-
+* **entrypoint.sh**: Simple shell script which gets executed when the container starts up. You can configure other commands which should run when the container starts.
 
 ## Versioning
 
@@ -85,3 +100,9 @@ Please follow this guide here: https://developer.cisco.com/docs/iox/#!overview
 ## License
 
 This project is licensed under the Apache License 2.0 - see the [LICENSE.md](LICENSE.md) file for details
+
+## More Information about IOx
+
+* Documentation: [Installation guides, app network settings & more](https://developer.cisco.com/docs/iox/)
+* Learning Labs: [Step by step learning guides](https://developer.cisco.com/learning/labs/tags/IOx/page/1)
+* Find more IOx Apps: [DevNet CodeExchange: IOx Apps](https://developer.cisco.com/codeexchange/platforms/iox)
