@@ -4,12 +4,12 @@ With this application you can easily deploy the **NGINX web-server** on your IOx
 
 ## Quickstart: Build & Install
 
-Change `x86`to `ARM` to build the app for the ARM-architecture.
+Change `x86`to `ARM` below to build the app for the ARM-architecture.
 
 ### 1.a Create the Package File (IOx Docker App)
 
 ```
-docker build https://github.com/flopach/iox-webserver.git:x86 -t ioxapp
+docker build https://github.com/flopach/iox-webserver.git#:x86 -t ioxapp
 docker save ioxapp > ioxapp.tar
 ```
 
@@ -39,8 +39,7 @@ The [Docker Runtime](https://www.docker.com/products/docker-desktop) and [ioxcli
 
 ### Differences between /ARM and /x86
 
-IOx runs on different hardware platforms which are using different CPU architectures. For example: ARM for IR1101, x86 for IC3000 and IR829/IR809.
-However, with this application only 2 lines of code are different as you will see below. With the character `#` we are commenting the other architecture out.
+IOx runs on different hardware platforms which are using different CPU architectures. For example: ARM for IR1101, x86 for IC3000 and IR829/IR809. However, with this application only 2 lines of code are different as you will see below.
 
 > Check out the [IOx Platform Support Matrix](https://developer.cisco.com/docs/iox/#!platform-support-matrix) for more information!
 
@@ -50,7 +49,6 @@ Dockerfile:
 
 ```
 # ARM or x86
-#FROM alpine:latest
 FROM arm64v8/alpine:latest
 ```
 
@@ -58,7 +56,6 @@ package.yaml:
 
 ```
 app:
-  #cpuarch: "x86_64"
   cpuarch: "aarch64"
 ```
 
@@ -69,7 +66,6 @@ Dockerfile:
 ```
 # ARM or x86
 FROM alpine:latest
-#FROM arm64v8/alpine:latest
 ```
 
 package.yaml:
@@ -77,16 +73,15 @@ package.yaml:
 ```
 app:
   cpuarch: "x86_64"
-  #cpuarch: "aarch64"
 ```
 
 #### 2. Edit Configuration files
 
-You may edit the configuration files:
+You can edit the configuration files:
 
 * **Dockerfile**: Add more files to the webserver
 * **nginx.conf**: Configure your nginx server
-* **index.html**: Change the website running on the server
+* **index.html**: Change the website running on the server and add even more files
 * **entrypoint.sh**: Simple shell script which gets executed when the container starts up. You can configure other commands which should run when the container starts.
 
 ## Versioning
