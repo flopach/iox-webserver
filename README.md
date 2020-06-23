@@ -6,7 +6,7 @@ With this application you can easily deploy the **NGINX web-server** on your IOx
 
 Change `x86`to `ARM` below to build the app for the ARM-architecture.
 
-### 1.a Create the Package File (IOx Docker App)
+### 1.a Create the Docker Container
 
 ```
 docker build https://github.com/flopach/iox-webserver.git#:x86 -t ioxapp
@@ -15,7 +15,7 @@ docker save ioxapp > ioxapp.tar
 
 The [Docker Runtime](https://www.docker.com/products/docker-desktop) needs to be installed on your computer.
 
-### 1.b Create the Package File (IOx App)
+### 1.b Create the IOx Package File
 
 ```
 git clone https://github.com/flopach/iox-webserver
