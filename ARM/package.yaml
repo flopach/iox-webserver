@@ -1,6 +1,6 @@
 descriptor-schema-version: "2.7"
 info:
-  name: "IOx Webserver"
+  name: "Webserver Nginx on IOx"
   author-link: "http://www.cisco.com"
   author-name: "Flo Pachinger"
   description: "Nginx Webserver (Port 8000)"
@@ -20,7 +20,6 @@ app:
         interface-name: eth0
         ports:
           tcp: ["8000"]
-
   startup:
     rootfs: rootfs.tar
-    target: ["/entrypoint.sh"]
+    target: nginx -g 'daemon off;'

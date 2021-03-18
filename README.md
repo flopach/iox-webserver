@@ -1,38 +1,45 @@
-# IOx App: Webserver
+# IOx App: Nginx Webserver
 
-With this application you can easily deploy the **NGINX web-server** on your IOx network device.
+With this application you can easily deploy the **NGINX web-server** on your IOx network device. Features include:
+
+**Simple index page when visiting `http://<IP>:8000/index`**
+![](images/index.png)
+
+**Change app configuration from the Local Manager and view the configuration inside the container in the browser**
+![](images/app-config-LM.png)
+![](images/app-config-inside.png)
+
+**View the whole container (files and folders) inside the browser**
+![](images/docker-container.png)
+
+**View generated logs**
+![](images/logs.png)
 
 ## Quickstart: Build & Install
 
 Change `x86`to `ARM` below to build the app for the ARM-architecture.
 
-### 1.a Create the Docker Container
-
-```
-docker build https://github.com/flopach/iox-webserver.git#:x86 -t ioxapp
-docker save ioxapp > ioxapp.tar
-```
-
-The [Docker Runtime](https://www.docker.com/products/docker-desktop) needs to be installed on your computer.
-
-### 1.b Create the IOx Package File
-
 ```
 git clone https://github.com/flopach/iox-webserver
 cd iox-webserver/x86
 docker build -t ioxapp .
-ioxclient docker package ioxapp .
+./ioxclient docker package ioxapp .
 ```
+
 The [Docker Runtime](https://www.docker.com/products/docker-desktop) and [ioxclient](https://developer.cisco.com/docs/iox/#!iox-resource-downloads/downloads) need to be installed on your computer. You can download the files via [Git](https://git-scm.com/downloads) or as ZIP (Clone or download > Download ZIP).
 
 ### 2. Installation, Configuration & Outcome
 
 1. Install the application on your IOx device.
-2. Go to `http://<IP to Container>:8000` and you will see the output of the `index.html`-file.
+2. Go to `http://<IP to Container>:8000 --> filesystem of the container.
+
+`http://<IP to Container>:8000/index` -> filesystem of the container
+
+`http://<IP to Container>:8000/config` -> App-Config file
 
 **Tested Hardware**
 
-* Cisco IR1101 / IOS XE 17.1
+* Cisco IR1101 / IOS XE 17.4
 * Cisco IC3000 / 1.2.1
 
 ## Deep-Dive: Configure the IOx App
@@ -75,14 +82,35 @@ app:
   cpuarch: "x86_64"
 ```
 
-#### 2. Edit Configuration files
+### Configuration files
 
 You can edit the configuration files:
 
 * **Dockerfile**: Add more files to the webserver
 * **nginx.conf**: Configure your nginx server
 * **index.html**: Change the website running on the server and add even more files
-* **entrypoint.sh**: Simple shell script which gets executed when the container starts up. You can configure other commands which should run when the container starts.
+
+### IOx App Networking Configuration
+
+For the IR1101:
+
+```
+interface VirtualPortGroup0
+ip address 192.168.1.1 255.255.255.0
+ip nat inside
+ip virtual-reassembly
+
+interface Vlan1
+ip nat outside
+ip virtual-reassembly
+
+app-hosting appid [APP_NAME]
+app-vnic gateway0 virtualportgroup 0 guest-interface 0
+guest-ipaddress 192.168.1.2 netmask 255.255.255.0
+app-default-gateway 192.168.1.1 guest-interface 0
+
+ip nat inside source static tcp 192.168.1.2 8000 interface Vlan1 8000
+```
 
 ## Versioning
 
