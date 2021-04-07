@@ -104,11 +104,6 @@ interface Vlan1
 ip nat outside
 ip virtual-reassembly
 
-app-hosting appid [APP_NAME]
-app-vnic gateway0 virtualportgroup 0 guest-interface 0
-guest-ipaddress 192.168.1.2 netmask 255.255.255.0
-app-default-gateway 192.168.1.1 guest-interface 0
-
 ip nat inside source static tcp 192.168.1.2 8000 interface Vlan1 8000
 ```
 
