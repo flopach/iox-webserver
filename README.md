@@ -1,38 +1,61 @@
-# IOx App: Filehosting
+# IOx App: Nginx Webserver
 
-With this application you can easily deploy the **NGINX web-server** on your IOx network device.
+With this application you can easily deploy the **NGINX web-server** on your IOx network device. Features include:
 
-## Running the App
+**Simple index page when visiting `http://<IP>:8000/index`**
+![](images/index.png)
 
-### Download deploy-ready Package File
+**Change app configuration from the Local Manager and view the configuration inside the container in the browser**
+![](images/app-config-LM.png)
+![](images/app-config-inside.png)
 
-1. Download your package from the `package_files` folder.
+**View the whole container (files and folders) inside the browser**
+![](images/docker-container.png)
 
-### Installation & Configuration
+**View generated logs**
+![](images/logs.png)
+
+## Quickstart: Build & Install
+
+Change `x86`to `ARM` below to build the app for the ARM-architecture.
+
+```
+git clone https://github.com/flopach/iox-webserver
+cd iox-webserver/x86
+docker build -t ioxapp .
+./ioxclient docker package ioxapp .
+```
+
+The [Docker Runtime](https://www.docker.com/products/docker-desktop) and [ioxclient](https://developer.cisco.com/docs/iox/#!iox-resource-downloads/downloads) need to be installed on your computer. You can download the files via [Git](https://git-scm.com/downloads) or as ZIP (Clone or download > Download ZIP).
+
+### 2. Installation, Configuration & Outcome
 
 1. Install the application on your IOx device.
-2. Go to `http://<IP to Container>:8000` and you will see the output of the `index.html`-file.
+2. Go to `http://<IP to Container>:8000 --> filesystem of the container.
 
-### Tested Hardware
+`http://<IP to Container>:8000/index` -> filesystem of the container
 
-* Cisco IR1101 / IOS XE 17.1
+`http://<IP to Container>:8000/config` -> App-Config file
+
+**Tested Hardware**
+
+* Cisco IR1101 / IOS XE 17.4
 * Cisco IC3000 / 1.2.1
 
-## Building the App
+## Deep-Dive: Configure the IOx App
 
-### 1. Select IOx Platform
+### Differences between /ARM and /x86
 
-Check the CPU architecture on your hardware (for example: ARM for IR1101, x86 for IC3000 and IR829/IR809) and edit the configuration files. With the character `#` we are commenting the other architecture out.
+IOx runs on different hardware platforms which are using different CPU architectures. For example: ARM for IR1101, x86 for IC3000 and IR829/IR809. However, with this application only 2 lines of code are different as you will see below.
 
 > Check out the [IOx Platform Support Matrix](https://developer.cisco.com/docs/iox/#!platform-support-matrix) for more information!
 
-####ARM-based IOx devices
+**ARM-based IOx devices in folder /ARM**
 
 Dockerfile:
 
 ```
 # ARM or x86
-#FROM alpine:latest
 FROM arm64v8/alpine:latest
 ```
 
@@ -40,18 +63,16 @@ package.yaml:
 
 ```
 app:
-  #cpuarch: "x86_64"
   cpuarch: "aarch64"
 ```
 
-####x86-based IOx devices
+**x86-based IOx devices in folder /x86**
 
 Dockerfile:
 
 ```
 # ARM or x86
 FROM alpine:latest
-#FROM arm64v8/alpine:latest
 ```
 
 package.yaml:
@@ -59,22 +80,37 @@ package.yaml:
 ```
 app:
   cpuarch: "x86_64"
-  #cpuarch: "aarch64"
 ```
 
-#### 2. Edit Configuration files
+### Configuration files
 
-You may edit the configuration files:
+You can edit the configuration files:
 
 * **Dockerfile**: Add more files to the webserver
 * **nginx.conf**: Configure your nginx server
-* **index.html**: Change the website running on the server
-* **entrypoint.sh**: Configure other applications which should run when the container starts
+* **index.html**: Change the website running on the server and add even more files
 
-#### 3. Build .tar package and deploy
+### IOx App Networking Configuration
 
-Please follow this guide here: https://developer.cisco.com/docs/iox/#!overview
+For the IR1101:
 
+```
+interface VirtualPortGroup0
+ip address 192.168.1.1 255.255.255.0
+ip nat inside
+ip virtual-reassembly
+
+interface Vlan1
+ip nat outside
+ip virtual-reassembly
+
+app-hosting appid [APP_NAME]
+app-vnic gateway0 virtualportgroup 0 guest-interface 0
+guest-ipaddress 192.168.1.2 netmask 255.255.255.0
+app-default-gateway 192.168.1.1 guest-interface 0
+
+ip nat inside source static tcp 192.168.1.2 8000 interface Vlan1 8000
+```
 
 ## Versioning
 
@@ -87,3 +123,9 @@ Please follow this guide here: https://developer.cisco.com/docs/iox/#!overview
 ## License
 
 This project is licensed under the Apache License 2.0 - see the [LICENSE.md](LICENSE.md) file for details
+
+## More Information about IOx
+
+* Documentation: [Installation guides, app network settings & more](https://developer.cisco.com/docs/iox/)
+* Learning Labs: [Step by step learning guides](https://developer.cisco.com/learning/labs/tags/IOx/page/1)
+* Find more IOx Apps: [DevNet CodeExchange: IOx Apps](https://developer.cisco.com/codeexchange/platforms/iox)
