@@ -1,6 +1,6 @@
 descriptor-schema-version: "2.7"
 info:
-  name: "Webserver Nginx on IOx"
+  name: "nginx_iox_arm"
   author-link: "http://www.cisco.com"
   author-name: "Flo Pachinger"
   description: "Nginx Webserver (Port 8000)"

@@ -109,6 +109,7 @@ ip nat inside source static tcp 192.168.1.2 8000 interface Vlan1 8000
 
 ## Versioning
 
+**1.0.1** - Changed IOx App name
 **1.0** - Added basic functionality with Nginx and working configuration file
 
 ## Authors
